@@ -8,29 +8,26 @@ services:
       - mongodb-data:/data/db
 
   backend:
-    # build: ./backend
-    image: task-manager-backend:1.1.0
+    build:
+      context: ./backend
+      target: production
+    image: task-manager-backend:1.2.0
     container_name: task-manager-backend
     ports: 
       - "3000:3000"
     environment:
       PORT: 3000
       MONGODB_URI: mongodb://mongodb:27017/task-manager
-    volumes:
-      - ./backend/src:/app/src
-    command: npx nodemon -L src/server.js
     depends_on:
       - mongodb
 
   frontend:
-    # build: ./frontend
-    image: task-manager-frontend:1.0.1
+    build:
+      context: ./frontend
+    image: task-manager-frontend:1.1.0
     container_name: task-manager-frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "80:80"
     depends_on:
       - backend
 

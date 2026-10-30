@@ -1,5 +1,9 @@
 node_modules/
+
 dist/
 build/
+
+docker-compose.override.yaml
+docker-compose.override.yml
 
 *.log

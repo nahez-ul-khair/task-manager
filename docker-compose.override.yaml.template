@@ -1,0 +1,18 @@
+# Paste in 'docker-compose.override.yaml'
+
+.services:
+  backend:
+    build:
+      context: ./backend
+      target: development
+    volumes:
+      - ./backend/src:/app/src
+    command: npx nodemon -L src/server.js
+
+  frontend:
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
