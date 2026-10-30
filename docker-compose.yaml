@@ -1,0 +1,43 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:8.0-ubi9-slim
+    container_name: task-manager-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+
+  backend:
+    # build: ./backend
+    image: task-manager-backend:1.1.0
+    container_name: task-manager-backend
+    ports: 
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongodb:27017/task-manager
+    volumes:
+      - ./backend/src:/app/src
+    command: npx nodemon -L src/server.js
+    depends_on:
+      - mongodb
+
+  frontend:
+    # build: ./frontend
+    image: task-manager-frontend:1.0.1
+    container_name: task-manager-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mongodb-data:
+    name: task-manager-mongodb-data
+
+networks:
+  default:
+    name: task-manager-network
